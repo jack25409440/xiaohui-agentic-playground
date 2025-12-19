@@ -9,6 +9,7 @@ This repository contains experiments with different agentic design patterns for 
 - **Prompt Chaining** - Decomposing complex tasks into sequential subtasks
 - **Routing** - Dynamically directing inputs to specialized handlers
 - **Orchestrator-Worker** - Coordinating multiple specialized workers
+- **Multi-Agent Adversarial Simulation** - Agents with opposing objectives engaging in realistic exchanges
 
 ## Prerequisites
 
@@ -95,7 +96,9 @@ Open the notebooks in VS Code, Cursor, or JupyterLab and select the `Python (age
 ```
 xiaohui-agentic-playground/
 ├── 1-agentic-workflow/
-│   └── agentic_systems.ipynb    # Main notebook with agentic patterns
+│   └── agentic_systems.ipynb    # Agentic patterns for classification
+├── 2-openai-sdk/
+│   └── email_battle.ipynb       # Multi-agent adversarial simulation
 ├── .env.example                  # Template for environment variables
 ├── .gitignore
 ├── pyproject.toml               # Project dependencies (UV/pip)
@@ -109,6 +112,7 @@ xiaohui-agentic-playground/
 |---------|---------|
 | `openai` | OpenAI API client |
 | `anthropic` | Anthropic API client |
+| `openai-agents` | OpenAI Agents SDK for multi-agent workflows |
 | `python-dotenv` | Load environment variables from `.env` |
 | `datasets` | HuggingFace Datasets (for AG News dataset) |
 | `scikit-learn` | Metrics and evaluation |
@@ -134,7 +138,74 @@ Explores different agentic workflow patterns using news classification as a benc
 - **Routing**: Dynamic routing to specialized classifiers based on content
 - **Orchestrator-Worker**: Parallel worker evaluation with orchestrator synthesis
 
-Uses the [AG News dataset](https://huggingface.co/datasets/ag_news) with 4 categories: World, Sports, Business, Sci/Tech.
+Uses the [AG News dataset](https://huggingface.co/datasets/sh0416/ag_news) with 4 categories: World, Sports, Business, Sci/Tech.
+
+---
+
+### 2. Email Battle (`2-openai-sdk/email_battle.ipynb`)
+
+A multi-agent adversarial simulation using the **OpenAI Agents SDK**, featuring two AI agents with opposing objectives engaged in a realistic email exchange:
+
+#### Agents
+
+| Agent | Role | Objective |
+|-------|------|-----------|
+| **Elon Musk (DOGE)** | Head of Department of Government Efficiency | Identify and terminate coasting employees through probing questions |
+| **John Smith (USCIS)** | GS-12 Immigration Services Officer | Survive the efficiency review by making minimal work sound productive |
+
+#### Workflow
+
+```
+Phase 1: Mass Email
+    Elon sends generic accomplishment request to all employees
+
+Phase 2: Initial Response  
+    John crafts bureaucratic response listing "accomplishments"
+
+Phase 3: Evaluation
+    Elon decides: [PASS] or [FOLLOW-UP]
+
+Phase 4: Follow-up Exchange (if triggered)
+    Back-and-forth probing until:
+    - [FINAL DECISION: TERMINATED] - Employee fired
+    - [FINAL DECISION: RETAINED] - Employee keeps job
+    - MAX_ROUNDS reached
+```
+
+#### Features
+
+- **Multi-Provider Support**: Uses OpenAI models natively and Anthropic models via OpenAI-compatible API
+- **Tournament System**: Runs multiple battles with different model combinations
+- **Full Thread Context**: Each agent receives the complete email history for strategic continuity
+- **Beautiful Output**: Markdown-formatted email chains with emoji indicators and summary tables
+- **Configurable Rounds**: Adjustable maximum follow-up rounds per battle
+
+#### Supported Models
+
+| Provider | Models |
+|----------|--------|
+| **OpenAI** | GPT-4.1, GPT-4o, GPT-5 Mini, GPT-5.2, GPT-5.2 Pro, o3-mini |
+| **Anthropic** | Claude Sonnet 4.5, Claude Opus 4.5 |
+
+#### Sample Battle Configurations
+
+```python
+BATTLES = [
+    BattleConfig("Battle 1: GPT-5.2 vs Claude Opus 4.5", "gpt-5.2", "claude-opus-4-5"),
+    BattleConfig("Battle 2: Claude Opus 4.5 vs GPT-5.2", "claude-opus-4-5", "gpt-5.2"),
+    # ... more battles
+]
+```
+
+#### Key Technical Details
+
+- **Agent Instructions**: Detailed system prompts defining persona, communication style, and decision criteria
+- **Decision Parsing**: Regex extraction of `[DECISION: ...]` and `[FINAL DECISION: ...]` tags
+- **Refusal Detection**: Validates responses to handle safety guardrail triggers gracefully
+- **Async Execution**: Uses `asyncio` for non-blocking agent interactions
+- **Tracing**: Integrates with OpenAI console for workflow visibility
+
+---
 
 ## License
 
