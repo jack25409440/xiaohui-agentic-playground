@@ -138,4 +138,4 @@ Uses the [AG News dataset](https://huggingface.co/datasets/ag_news) with 4 categ
 
 ## License
 
-MIT
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
