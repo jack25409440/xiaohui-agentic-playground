@@ -9,6 +9,7 @@ dependencies = [
     "datasets>=4.4.1",
     "ipykernel>=7.1.0",
     "openai>=2.14.0",
+    "openai-agents>=0.6.3",
     "python-dotenv>=1.2.1",
     "scikit-learn>=1.8.0",
 ]
