@@ -96,10 +96,15 @@ Open the notebooks in VS Code, Cursor, or JupyterLab and select the `Python (age
 ```
 xiaohui-agentic-playground/
 ├── 1-agentic-workflow/
-│   └── agentic_systems.ipynb    # Agentic patterns for classification
+│   ├── agentic_systems.ipynb    # Agentic patterns for classification
+│   └── README.md                # Detailed documentation
 ├── 2-openai-sdk/
-│   └── email_battle.ipynb       # Multi-agent adversarial simulation
-├── .env.example                  # Template for environment variables
+│   ├── email_battle.ipynb       # Multi-agent adversarial simulation
+│   └── README.md                # Detailed documentation
+├── 3-crew-ai/
+│   └── email_battle/            # CrewAI implementation
+│       └── README.md            # Detailed documentation
+├── .env.example                 # Template for environment variables
 ├── .gitignore
 ├── pyproject.toml               # Project dependencies (UV/pip)
 ├── uv.lock                      # Locked dependencies
@@ -128,82 +133,50 @@ uv add <package-name>
 uv add --dev <package-name>
 ```
 
-## Notebooks
+## 📂 Projects
 
-### 1. Agentic Systems (`1-agentic-workflow/agentic_systems.ipynb`)
+### 1. Agentic Workflow Design Patterns
 
-Explores different agentic workflow patterns using news classification as a benchmark:
+📁 [`1-agentic-workflow/`](1-agentic-workflow/)
 
-- **Prompt Chaining**: Multi-step extraction → analysis → classification pipeline
-- **Routing**: Dynamic routing to specialized classifiers based on content
-- **Orchestrator-Worker**: Parallel worker evaluation with orchestrator synthesis
+Explores and compares **5 agentic workflow design patterns** using the AG News dataset for multi-class text classification:
 
-Uses the [AG News dataset](https://huggingface.co/datasets/sh0416/ag_news) with 4 categories: World, Sports, Business, Sci/Tech.
+| Pattern | Description | Best Accuracy |
+|---------|-------------|---------------|
+| Prompt Chaining | Sequential pipeline with entity extraction → analysis → classification | 83% |
+| Routing | Intelligent router directs input to specialized expert agents | 80% |
+| Parallelization | Multiple agents process simultaneously, results aggregated | 77% |
+| Orchestrator-Worker | Central orchestrator coordinates specialized worker agents | 77% |
+| Evaluator-Optimizer | Iterative refinement with evaluation and self-critique | 73% |
+
+➡️ **[See full documentation](1-agentic-workflow/README.md)**
 
 ---
 
-### 2. Email Battle (`2-openai-sdk/email_battle.ipynb`)
+### 2. Email Battle (OpenAI Agents SDK)
 
-A multi-agent adversarial simulation using the **OpenAI Agents SDK**, featuring two AI agents with opposing objectives engaged in a realistic email exchange:
+📁 [`2-openai-sdk/`](2-openai-sdk/)
 
-#### Agents
+A **multi-agent adversarial simulation** using the OpenAI Agents SDK. Two AI agents with opposing objectives engage in a realistic email exchange:
 
 | Agent | Role | Objective |
 |-------|------|-----------|
-| **Elon Musk (DOGE)** | Head of Department of Government Efficiency | Identify and terminate coasting employees through probing questions |
-| **John Smith (USCIS)** | GS-12 Immigration Services Officer | Survive the efficiency review by making minimal work sound productive |
+| **Elon Musk (DOGE)** | Head of Department of Government Efficiency | Identify and terminate coasting employees |
+| **John Smith (USCIS)** | GS-12 Immigration Services Officer | Survive the efficiency review |
 
-#### Workflow
+Features tournament-style battles across 8 model combinations (GPT-5.2, Claude Opus 4.5, etc.) with full email thread context preservation.
 
-```
-Phase 1: Mass Email
-    Elon sends generic accomplishment request to all employees
+➡️ **[See full documentation](2-openai-sdk/README.md)**
 
-Phase 2: Initial Response  
-    John crafts bureaucratic response listing "accomplishments"
+---
 
-Phase 3: Evaluation
-    Elon decides: [PASS] or [FOLLOW-UP]
+### 3. Email Battle (CrewAI)
 
-Phase 4: Follow-up Exchange (if triggered)
-    Back-and-forth probing until:
-    - [FINAL DECISION: TERMINATED] - Employee fired
-    - [FINAL DECISION: RETAINED] - Employee keeps job
-    - MAX_ROUNDS reached
-```
+📁 [`3-crew-ai/email_battle/`](3-crew-ai/email_battle/)
 
-#### Features
+The same Email Battle scenario implemented using the **CrewAI framework**, demonstrating an alternative approach to multi-agent orchestration with YAML-based agent/task configuration.
 
-- **Multi-Provider Support**: Uses OpenAI models natively and Anthropic models via OpenAI-compatible API
-- **Tournament System**: Runs multiple battles with different model combinations
-- **Full Thread Context**: Each agent receives the complete email history for strategic continuity
-- **Beautiful Output**: Markdown-formatted email chains with emoji indicators and summary tables
-- **Configurable Rounds**: Adjustable maximum follow-up rounds per battle
-
-#### Supported Models
-
-| Provider | Models |
-|----------|--------|
-| **OpenAI** | GPT-4.1, GPT-4o, GPT-5 Mini, GPT-5.2, GPT-5.2 Pro, o3-mini |
-| **Anthropic** | Claude Sonnet 4.5, Claude Opus 4.5 |
-
-#### Sample Battle Configurations
-
-```python
-BATTLES = [
-    BattleConfig("Battle 1: GPT-5.2 vs Claude Opus 4.5", "gpt-5.2", "claude-opus-4-5"),
-    BattleConfig("Battle 2: Claude Opus 4.5 vs GPT-5.2", "claude-opus-4-5", "gpt-5.2"),
-    # ... more battles
-]
-```
-
-#### Key Technical Details
-
-- **Agent Instructions**: Detailed system prompts defining persona, communication style, and decision criteria
-- **Decision Parsing**: Regex extraction of `[DECISION: ...]` and `[FINAL DECISION: ...]` tags
-- **Refusal Detection**: Validates responses to handle safety guardrail triggers gracefully
-- **Async Execution**: Uses `asyncio` for non-blocking agent interactions
-- **Tracing**: Integrates with OpenAI console for workflow visibility
+➡️ **[See full documentation](3-crew-ai/email_battle/README.md)**
 
 ---
 
